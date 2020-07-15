@@ -1,0 +1,284 @@
+#include "ACD.h"
+#include "BIT_Math.h"
+
+void ADC_INIT(void)
+{
+	#if ADC_VOLTAGE_REFERENCE    ==   ADC_VREF_VCC
+	{
+	   SET_BIT(ADMUX,6);
+	   CLR_BIT(ADMUX,7);
+	}
+	#elif ADC_VOLTAGE_REFERENCE   ==  ADC_VREF_AREF
+	{
+		CLR_BIT(ADMUX,6);
+		CLR_BIT(ADMUX,7);
+	}
+	#elif ADC_VOLTAGE_REFERENCE   ==  ADC_VREF_INTERNA_VOLTAGE
+	{
+		SET_BIT(ADMUX,6);
+		SET_BIT(ADMUX,7);
+	}
+	#endif
+	
+	#if ADC_ADJUST_DEFINE    ==     ADC_RIGHT_ADJUST
+	{
+		CLR_BIT(ADMUX,5);
+	}
+	#elif ADC_ADJUST_DEFINE    ==   ADC_LEFT_ADJUST
+	{
+		SET_BIT(ADMUX,5);
+	}
+	#endif
+	
+	#if ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_0
+	{
+		CLR_BIT(ADMUX,0);
+		CLR_BIT(ADMUX,1);
+		CLR_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_1
+	{
+		SET_BIT(ADMUX,0);
+		CLR_BIT(ADMUX,1);
+		CLR_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_2
+	{
+		CLR_BIT(ADMUX,0);
+		SET_BIT(ADMUX,1);
+		CLR_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_3
+	{
+		SET_BIT(ADMUX,0);
+		SET_BIT(ADMUX,1);
+		CLR_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_4
+	{
+		CLR_BIT(ADMUX,0);
+		CLR_BIT(ADMUX,1);
+		SET_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_5
+	{
+		SET_BIT(ADMUX,0);
+		CLR_BIT(ADMUX,1);
+		SET_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_6
+	{
+		CLR_BIT(ADMUX,0);
+		SET_BIT(ADMUX,1);
+		SET_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#elif ADC_CHANNEL_DEFINE   ==     ADC_CHANNEL_7
+	{
+		SET_BIT(ADMUX,0);
+		SET_BIT(ADMUX,1);
+		SET_BIT(ADMUX,2);
+		CLR_BIT(ADMUX,3);
+		CLR_BIT(ADMUX,4);
+	}
+	#endif
+	
+	#if ADC_PRESC_DEFINE      ==     ADC_PRESC_2
+	{
+		SET_BIT(ADCSRA,0);
+		CLR_BIT(ADCSRA,1);
+		CLR_BIT(ADCSRA,2);
+	}
+	#elif ADC_PRESC_DEFINE      ==     ADC_PRESC_4
+	{
+		CLR_BIT(ADCSRA,0);
+		SET_BIT(ADCSRA,1);
+		CLR_BIT(ADCSRA,2);
+	}
+	#elif ADC_PRESC_DEFINE      ==     ADC_PRESC_8
+	{
+		SET_BIT(ADCSRA,0);
+		SET_BIT(ADCSRA,1);
+		CLR_BIT(ADCSRA,2);
+	}
+	#elif ADC_PRESC_DEFINE      ==     ADC_PRESC_16
+	{
+		CLR_BIT(ADCSRA,0);
+		CLR_BIT(ADCSRA,1);
+		SET_BIT(ADCSRA,2);
+	}
+	#elif ADC_PRESC_DEFINE      ==     ADC_PRESC_32
+	{
+		SET_BIT(ADCSRA,0);
+		CLR_BIT(ADCSRA,1);
+		SET_BIT(ADCSRA,2);
+	}
+	#elif ADC_PRESC_DEFINE      ==     ADC_PRESC_64
+	{
+		CLR_BIT(ADCSRA,0);
+		SET_BIT(ADCSRA,1);
+		SET_BIT(ADCSRA,2);
+	}
+	#elif ADC_PRESC_DEFINE      ==     ADC_PRESC_128
+	{
+		SET_BIT(ADCSRA,0);
+		SET_BIT(ADCSRA,1);
+		SET_BIT(ADCSRA,2);
+	}
+	#endif
+	
+	#if    ADC_INTERRUPT_DEFINE   ==    ADC_INTERRUPT_DISABLE
+	{
+		CLR_BIT(ADCSRA,3);
+	}
+	#elif  ADC_INTERRUPT_DEFINE   ==    ADC_INTERRUPT_ENABLE
+	{
+		SET_BIT(ADCSRA,3);
+		SET_BIT(SREG,7);
+	}
+	#endif
+	
+	#if ADC_TRIGGER_DEFINE     ==     ADC_AUTO_TRIGGER
+	{
+		SET_BIT(ADCSRA,5);
+	}
+	#endif
+	
+	#if ADC_AUTO_TRIGGER_SOURCE  ==  ADC_FREE_RUNNING_MODE
+	{
+		CLR_BIT(SFIOR,5);
+		CLR_BIT(SFIOR,6);
+		CLR_BIT(SFIOR,7);
+	}
+	#elif ADC_AUTO_TRIGGER_SOURCE  ==  EXTERNAL_INTERRUPT
+	{
+		CLR_BIT(SFIOR,5);
+		SET_BIT(SFIOR,6);
+		CLR_BIT(SFIOR,7);
+	}
+	#endif
+	
+	#if ADC_STATUS         ==          ADC_ENABLE
+	{
+		SET_BIT(ADCSRA,7);
+	}
+	#elif ADC_STATUS       ==          ADC_DISABLE
+	{
+		CLR_BIT(ADCSRA,7);
+	}
+	#endif
+	
+	SET_BIT(ADCSRA,6);
+}
+
+void ADC_READ (uint16* read)
+{
+	
+	#if ADC_INTERRUPT_DEFINE    ==    ADC_INTERRUPT_DISABLE
+	{
+		#if ADC_ADJUST_DEFINE    ==     ADC_RIGHT_ADJUST
+		{
+		   while(!GET_BIT(ADCSRA,4));
+		   *read = ADC_ADJUST;
+		}
+		#elif ADC_ADJUST_DEFINE    ==     ADC_LEFT_ADJUST
+		{
+			while(!GET_BIT(ADCSRA,4));
+			*read=((ADCH<<2)||(ADCL>>6));
+		}
+		#endif
+	}
+	#endif
+}
+
+void ADC_CHANGE_CHANNEL (uint8 channel)
+{
+	switch(channel)
+	{
+		case ADC_CHANNEL_0 :
+		{
+			CLR_BIT(ADMUX,0);
+			CLR_BIT(ADMUX,1);
+			CLR_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_1 :
+		{
+			SET_BIT(ADMUX,0);
+			CLR_BIT(ADMUX,1);
+			CLR_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_2 :
+		{
+			CLR_BIT(ADMUX,0);
+			SET_BIT(ADMUX,1);
+			CLR_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_3 :
+		{
+			SET_BIT(ADMUX,0);
+			SET_BIT(ADMUX,1);
+			CLR_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_4 :
+		{
+			CLR_BIT(ADMUX,0);
+			CLR_BIT(ADMUX,1);
+			SET_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_5 :
+		{
+			SET_BIT(ADMUX,0);
+			CLR_BIT(ADMUX,1);
+			SET_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_6 :
+		{
+			CLR_BIT(ADMUX,0);
+			SET_BIT(ADMUX,1);
+			SET_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+		case ADC_CHANNEL_7 :
+		{
+			SET_BIT(ADMUX,0);
+			SET_BIT(ADMUX,1);
+			SET_BIT(ADMUX,2);
+			CLR_BIT(ADMUX,3);
+			CLR_BIT(ADMUX,4);
+			break;
+		}
+	}
+}
